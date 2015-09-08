@@ -33,6 +33,7 @@
     self.dbManager = [[DBManager alloc] initWithDatabaseFilename:@"sampledb.sql"];
     
     [self loadData];
+    [self loadDataRemind];
     
     [self.navigationController setNavigationBarHidden:NO];
     
@@ -44,6 +45,28 @@
     
     // Do any additional setup after loading the view, typically from a nib.
 }
+
+-(void)loadDataRemind{
+    // Form the query.
+    NSString *query = @"select * from reminder";
+    
+    // Get the results.
+    if (self.arrPeopleInfo != nil) {
+        self.arrPeopleInfo = nil;
+    }
+    self.arrPeopleInfo = [[NSArray alloc] initWithArray:[self.dbManager loadDataFromDB:query]];
+    
+    dataCount = self.arrPeopleInfo.count;
+    
+    NSLog(@" %@",self.arrPeopleInfo );
+    
+    
+    // [[NSUserDefaults standardUserDefaults] setValue:dataArray forKey:USERDEFAULT];
+    
+    NSLog(@" %@",self.arrPeopleInfo);
+    
+}
+
 -(void)loadData{
     // Form the query.
     NSString *query = @"select * from peopleInfo";
@@ -73,7 +96,17 @@
     [self.navigationController pushViewController:myVC animated:YES];
     
     [self insertQuery];
+    [self insertQueryReminder];
  }
+
+-(void)insertQueryReminder
+{
+    dataCount++;
+    NSString  *query = [NSString stringWithFormat:@"insert into reminder (name,text,date) VALUES (\"%@\",\"%@\",\"%@\")", @"test",@"test",@"test"];
+    
+    // Execute the query.
+    [self.dbManager executeQuery:query];
+}
 
 -(void)insertQuery
 {
